@@ -5,7 +5,6 @@ mod token;
 mod lexer;
 mod parse_tree;
 mod parser_descent;
-mod parser_pratt;
 
 use lexer::Lexer;
 
