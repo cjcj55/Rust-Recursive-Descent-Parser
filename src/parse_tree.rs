@@ -1,33 +1,42 @@
+#![allow(dead_code)]
+
 use crate::token::Token;
 
+pub enum NodeType {
+    FunctionDefinition,
+    AssignmentStatement,
+    // Add other node types here
+}
+
 pub struct ParseTree {
-    token : Token,
-    children : Vec<Box<ParseTree>>
+    token: Token,
+    node_type: NodeType,
+    children: Vec<Box<ParseTree>>,
 }
 
 impl ParseTree {
-
-    pub fn new(token : Token) -> ParseTree {
+    pub fn new(token: Token, node_type: NodeType) -> ParseTree {
         ParseTree {
             token,
-            children : vec![]
+            node_type,
+            children: vec![],
         }
     }
 
-    pub fn push(&mut self, tree : ParseTree) {
-        self.children.push(Box::<ParseTree>::new(tree));
+    pub fn push(&mut self, tree: ParseTree) {
+        self.children.push(Box::new(tree));
     }
 
     pub fn node_string(&self) -> String {
         format!("{:?}", self.token)
     }
 
-    fn print_recursively(&self, level : usize) {
-        let shift = 2*level;
+    fn print_recursively(&self, level: usize) {
+        let shift = 2 * level;
         print!("{:1$}", "", shift);
         println!("{}", self.node_string());
         for child in &self.children {
-            child.as_ref().print_recursively(level+1);
+            child.as_ref().print_recursively(level + 1);
         }
     }
 

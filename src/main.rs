@@ -26,5 +26,7 @@ fn main() {
         sum = add(2) + 5;\
         print \"sum=\", sum;\
     ]"));
-    input.print_tokens();
+    //input.print_tokens();
+
+    parser_descent::main();
 }

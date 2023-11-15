@@ -1,8 +1,7 @@
-#[allow(non_camel_case_types, dead_code)]
-
 use std::mem::discriminant;
 
 #[derive(Debug, Clone)]
+#[allow(non_camel_case_types, dead_code)]
 pub enum Token {
     PARENS_L,
     PARENS_R,
@@ -40,6 +39,8 @@ pub enum Token {
     TYPE_INT32,
     TYPE_FLT32,
     TYPE_CHAR,
+    TYPE_STRING,
+    TYPE_BOOL,
     LIT_INT32(i32),
     LIT_FLT32(f32),
     LIT_CHAR(char),
@@ -56,11 +57,21 @@ impl PartialEq for Token {
 
 impl Eq for Token { }
 
+#[allow(dead_code)]
 impl Token {
     pub fn id() -> Token {
         Token::ID(String::new())
     }
     pub fn lit_int32() -> Token {
         Token::LIT_INT32(0)
+    }
+    pub fn lit_flt32() -> Token {
+        Token::LIT_FLT32(0.0)
+    }
+    pub fn lit_char() -> Token {
+        Token::LIT_CHAR('\0')
+    }
+    pub fn lit_string() -> Token {
+        Token::LIT_STRING(String::new())
     }
 }

@@ -24,6 +24,7 @@ pub(crate) struct Lexer {
     state: LexerState,
     current_token: Token,
     buffer: String,
+    tokens: Vec<Token>,
 }
 
 #[allow(dead_code)]
@@ -35,6 +36,7 @@ impl Lexer {
             state: LexerState::Start,
             current_token: Token::EOI,
             buffer: String::new(),
+            tokens: Vec::new(),
         }
     }
 
@@ -44,13 +46,17 @@ impl Lexer {
         self.state = LexerState::Start;
         self.current_token = Token::EOI;
         self.buffer.clear();
+        self.tokens.clear();
     }
 
     pub(crate) fn advance(&mut self) -> Token {
         loop {
             if self.pos >= self.input.len() {
                 self.state = LexerState::End;
-                return Token::EOI;
+                self.current_token = Token::EOI;
+                let token = Token::EOI;
+                self.tokens.push(token.clone());
+                return token;
             }
 
             let c = self.input.chars().nth(self.pos).unwrap();
@@ -267,6 +273,29 @@ impl Lexer {
         self.current_token.clone()
     }
 
+    pub(crate) fn peek_next(&self) -> Token {
+        if self.pos + 1 >= self.input.len() {
+            return Token::EOI;
+        }
+        self.tokens[self.pos + 1].clone()
+    }
+
+    pub(crate) fn curr1(&self) -> Token {
+        if self.pos >= self.input.len() {
+            return Token::EOI;
+        }
+        self.tokens[self.pos].clone()
+    }
+
+    pub(crate) fn advance1(&mut self) -> Token {
+        if self.pos >= self.tokens.len() {
+            return Token::EOI;
+        }
+        self.pos += 1;
+        self.tokens[self.pos - 1].clone()
+    }
+
+
     pub(crate) fn print_tokens(&mut self) {
         loop {
             let token = self.advance();
@@ -275,5 +304,16 @@ impl Lexer {
                 break;
             }
         }
+    }
+
+    pub(crate) fn collect_tokens(&mut self) {
+        loop {
+            let token = self.advance();
+            self.tokens.push(token.clone()); // Append the tokens to the tokens vector
+            if token == Token::EOI {
+                break;
+            }
+        }
+        self.pos = 0;
     }
 }
